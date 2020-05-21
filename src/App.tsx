@@ -47,9 +47,12 @@ const App: React.FC = () => {
       ]);
     }
   
-    // Get all the articles in date order:
+    /* // (1)
+  // Get all the articles in date order:
     console.log(await db.getAllFromIndex('articles', 'date'));
-  
+  */
+    
+  /* // (2)
     // Add 'And, happy new year!' to all articles on 2019-01-01:
     {
       const tx = db.transaction('articles', 'readwrite');
@@ -63,6 +66,8 @@ const App: React.FC = () => {
   
       await tx.done;
     }
+  */
+ console.log("It worked! Until you uncomment (1) && (2)");
   }
 
   const { appStore } = React.useContext(RootStoreContext);
