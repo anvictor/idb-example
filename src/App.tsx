@@ -1,6 +1,5 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { RootStoreContext } from './stores/RootStore';
 import { openDB } from 'idb';
 
 const App: React.FC = () => {
@@ -23,9 +22,9 @@ const App: React.FC = () => {
   
     // Add an article:
     await db.add('articles', {
+      body: '…',
       title: 'Article DWP 01',
       date: new Date('2019-01-01'),
-      body: '…',
     });
   
     // Add multiple articles in one transaction:
@@ -33,14 +32,14 @@ const App: React.FC = () => {
       const tx = db.transaction('articles', 'readwrite');
       await Promise.all([
         tx.store.add({
+          body: '…',
           title: 'Article DWP 02',
           date: new Date('2019-01-01'),
-          body: '…',
         }),
         tx.store.add({
+          body: '…',
           title: 'Article DWP 03',
           date: new Date('2019-01-02'),
-          body: '…',
         }),
         tx.done,
       ]);
@@ -53,18 +52,17 @@ const App: React.FC = () => {
     {
       const tx = db.transaction('articles', 'readwrite');
       const index = tx.store.index('date');
-  
-      // for await (const cursor of index.iterate(new Date('2019-01-01'))) {
-      //   const article = { ...cursor.value };
-      //   article.body += ' And, happy new year!';
-      //   cursor.update(article);
-      // }
-     
+      for await (const cursor of index.iterate(new Date('2019-01-01'))) {
+        const article = { ...cursor.value };
+        article.body += ' And, happy new year!';
+        cursor.update(article);
+      }
       
       await tx.done;
     }
   }
-  demo();
+  demo().then(result => console.log("result", result)).catch(error => alert(error));
+
   return (
     <div className="App">
      <h1>IndexedDB example</h1>
